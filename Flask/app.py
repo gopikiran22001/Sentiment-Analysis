@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS 
 import joblib
 import re
 import nltk
@@ -37,6 +38,7 @@ def predict_sentiment(text):
 
 # Flask app
 app = Flask(__name__)
+CORS(app)
 
 @app.route("/predict", methods=["GET"])
 def predict():
