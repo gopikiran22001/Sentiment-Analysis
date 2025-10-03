@@ -6,3 +6,4 @@ joblib
 waitress
 flask-cors
 gunicorn
+scikit-learn==1.5.2
