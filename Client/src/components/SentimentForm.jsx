@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
+const apiBaseUrl="http://localhost:8000";
 const SentimentForm = () => {
   const [text, setText] = useState('');
   const [result, setResult] = useState('');
@@ -42,7 +43,7 @@ const SentimentForm = () => {
     setResult('');
 
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL}/predict?text=${encodeURIComponent(text)}`);
+      const response = await fetch(`${apiBaseUrl}/predict?text=${encodeURIComponent(text)}`);
       
       if (!response.ok) {
         throw new Error('API request failed');
