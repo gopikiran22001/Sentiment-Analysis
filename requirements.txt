@@ -1,7 +1,6 @@
 flask
 pandas
 numpy
-scikit-learn==1.5.2
 nltk
 joblib
 waitress
