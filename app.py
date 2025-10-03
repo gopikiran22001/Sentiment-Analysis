@@ -38,7 +38,15 @@ def predict_sentiment(text):
 
 # Flask app
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "https://glistening-gumdrop-743c41.netlify.app"}})
+CORS(app)  # Still keep this
+
+# Force CORS headers on all responses
+@app.after_request
+def add_cors_headers(response):
+    response.headers.add('Access-Control-Allow-Origin', 'https://glistening-gumdrop-743c41.netlify.app')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    return response
 
 @app.route("/predict", methods=["GET"])
 def predict():
