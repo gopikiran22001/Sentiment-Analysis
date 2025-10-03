@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const SentimentForm = () => {
   const [text, setText] = useState('');
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showResult, setShowResult] = useState(false);
 
   const getSentimentColor = (sentiment) => {
     switch (sentiment?.toLowerCase()) {
@@ -21,6 +22,13 @@ const SentimentForm = () => {
       case 'neutral': return '😐';
       default: return '🤔';
     }
+  };
+
+  const clearAll = () => {
+    setText('');
+    setResult('');
+    setError('');
+    setShowResult(false);
   };
 
   const analyzeSentiment = async () => {
@@ -42,79 +50,103 @@ const SentimentForm = () => {
 
       const data = await response.json();
       setResult(data.sentiment);
+      setShowResult(true);
     } catch (err) {
-      setError('Failed to analyze sentiment. Please check if the API is running.');
+      setError('Unable to connect to the server. Please try again.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-lg mx-auto p-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-4">
-          <span className="text-2xl text-white">🧠</span>
+    <div className="w-full max-w-md sm:max-w-lg mx-auto p-4 sm:p-6 lg:p-8 bg-white rounded-2xl shadow-2xl border border-gray-100">
+      <div className="text-center mb-6 sm:mb-8">
+        <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mb-3 sm:mb-4">
+          <span className="text-xl sm:text-2xl text-white">🧠</span>
         </div>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           Sentiment Analysis
         </h1>
-        <p className="text-gray-500 mt-2">Discover the emotion behind your text</p>
+        <p className="text-sm sm:text-base text-gray-500 mt-2">Discover the emotion behind your text</p>
       </div>
       
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <div className="relative">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Type your message here and let AI analyze its sentiment..."
-            className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-all duration-200 text-gray-700 placeholder-gray-400"
-            rows="5"
+            placeholder="How are you feeling today? Share your thoughts..."
+            className="w-full p-3 sm:p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none transition-all duration-200 text-gray-700 placeholder-gray-400 text-sm sm:text-base"
+            rows="4"
+            maxLength="500"
           />
-          <div className="absolute bottom-3 right-3 text-xs text-gray-400">
+          <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-xs text-gray-400">
             {text.length}/500
           </div>
         </div>
         
-        <button
-          onClick={analyzeSentiment}
-          disabled={loading || !text.trim()}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 transition-all duration-200 font-semibold text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none"
-        >
-          {loading ? (
-            <div className="flex items-center justify-center space-x-2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-              <span>Analyzing...</span>
-            </div>
-          ) : (
-            'Analyze Sentiment'
+        <div className="flex gap-2 sm:gap-3">
+          <button
+            onClick={analyzeSentiment}
+            disabled={loading || !text.trim()}
+            className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-xl hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 transition-all duration-200 font-semibold text-sm sm:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none active:scale-95"
+          >
+            {loading ? (
+              <div className="flex items-center justify-center space-x-2">
+                <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white"></div>
+                <span className="text-sm sm:text-base">Analyzing...</span>
+              </div>
+            ) : (
+              <span className="text-sm sm:text-base">✨ Analyze</span>
+            )}
+          </button>
+          
+          {(text || result || error) && (
+            <button
+              onClick={clearAll}
+              className="px-3 sm:px-4 py-3 sm:py-4 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl transition-all duration-200 active:scale-95"
+            >
+              <span className="text-lg">🗑️</span>
+            </button>
           )}
-        </button>
+        </div>
 
         {error && (
-          <div className="p-4 text-red-700 bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-400 rounded-lg animate-pulse">
-            <div className="flex items-center space-x-2">
-              <span>⚠️</span>
-              <span>{error}</span>
+          <div className="p-3 sm:p-4 text-red-700 bg-gradient-to-r from-red-50 to-red-100 border-l-4 border-red-400 rounded-lg">
+            <div className="flex items-start space-x-2">
+              <span className="text-lg mt-0.5">⚠️</span>
+              <span className="text-sm sm:text-base">{error}</span>
             </div>
           </div>
         )}
 
-        {result && (
-          <div className={`p-6 border-2 rounded-xl ${getSentimentColor(result)} transform transition-all duration-300 animate-pulse`}>
+        {showResult && result && (
+          <div className={`p-4 sm:p-6 border-2 rounded-xl ${getSentimentColor(result)} transform transition-all duration-500 scale-100`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <span className="text-3xl">{getSentimentIcon(result)}</span>
+                <span className="text-2xl sm:text-3xl">{getSentimentIcon(result)}</span>
                 <div>
-                  <p className="text-sm font-medium opacity-75">Detected Sentiment</p>
-                  <p className="text-2xl font-bold capitalize">{result}</p>
+                  <p className="text-xs sm:text-sm font-medium opacity-75">Detected Sentiment</p>
+                  <p className="text-lg sm:text-2xl font-bold capitalize">{result}</p>
                 </div>
               </div>
               <div className="text-right">
-                <div className="w-12 h-12 rounded-full bg-white bg-opacity-50 flex items-center justify-center">
-                  <span className="text-xl">✨</span>
+                <div className="w-8 h-8 sm:w-12 sm:h-12 rounded-full bg-white bg-opacity-50 flex items-center justify-center">
+                  <span className="text-sm sm:text-xl">✨</span>
                 </div>
               </div>
             </div>
+          </div>
+        )}
+        
+        {showResult && (
+          <div className="text-center">
+            <button
+              onClick={() => setText('')}
+              className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+            >
+              Try another text →
+            </button>
           </div>
         )}
       </div>
