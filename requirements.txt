@@ -6,3 +6,4 @@ nltk==3.9.1
 joblib==1.4.2
 waitress
 flask-cors
+gunicorn
