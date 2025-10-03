@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+Client/node_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+Flask/venv/
+Flask/env/
+*.egg-info/
+
+# Environment variables
+.env
+Client/.env.local
+Client/.env.development.local
+Client/.env.test.local
+Client/.env.production.local
+
+# Build outputs
+Client/build/
+Client/dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Model files (optional - uncomment if models are large)
+# *.joblib
+# *.pkl

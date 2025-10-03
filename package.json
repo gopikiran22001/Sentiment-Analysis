@@ -1,0 +1,19 @@
+{
+  "name": "sentiment-analysis",
+  "version": "1.0.0",
+  "description": "A sentiment analysis system will determine the emotional tone behind a text, whether it is positive, negative, or neutral, in real time.",
+  "license": "ISC",
+  "author": "Bug_Slayers",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run start-react\" \"npm run start-flask\"",
+    "start-react": "cd Client && npm start",
+    "start-flask": "cd Flask && waitress-serve --listen=0.0.0.0:8000 app:app",
+    "install": "cd Client && npm install && cd ../Flask && pip install -r requirements.txt",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
