@@ -38,10 +38,7 @@ def predict_sentiment(text):
 
 # Flask app
 app = Flask(__name__)
-CORS(app, origins=[
-    "https://lambent-souffle-4e2ae2.netlify.app",
-    "https://glistening-gumdrop-743c41.netlify.app"
-])
+CORS(app)
 
 @app.route("/predict", methods=["GET"])
 def predict():
